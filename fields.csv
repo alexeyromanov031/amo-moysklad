@@ -1,0 +1,11 @@
+﻿Сущность в Амо;Наименование поля в Амо;Имя или id поля в Амо;Сущность в Мой Склад;Наименование поля в Мойсклад;Имя или id поля в МойСклад
+lead;Ссылка на сделку Амо;_links.self.href;customerorder;;7092a570-76ba-11ed-0a80-0fde000a17d9
+lead;Бюджет;price;customerorder;;
+lead;Project;2288581;customerorder;Project;f14c9299-7f8b-11ed-0a80-03e9003b1808
+lead;Способ заказа;1969983;customerorder;Способ заказа;03eed141-7aa8-11ed-0a80-03dc0004752f
+lead;Способ отправки;1991109;customerorder;Способ отправки;03eed389-7aa8-11ed-0a80-03dc00047530
+lead;Метод оплаты;1991109;customerorder;Метод оплаты;83b06940-7f8c-11ed-0a80-03e9003b3ed3
+lead;Транспортная компания;1988163;customerorder;Транспортная компания;83b06c72-7f8c-11ed-0a80-03e9003b3ed4
+lead;Трек1;1785064;demand;Трек-номер;e9dee5be-80f8-11ed-0a80-013a001e8a7f
+lead;Обработан;1988901;customerorder;;
+contact;Description;1967219;customerorder;;addInfo
