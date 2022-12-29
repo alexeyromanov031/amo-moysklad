@@ -1,5 +1,6 @@
 ﻿Сущность в Амо;Наименование поля в Амо;Имя или id поля в Амо;Сущность в Мой Склад;Наименование поля в Мойсклад;Имя или id поля в МойСклад
 lead;Ссылка на сделку Амо;_links.self.href;customerorder;;7092a570-76ba-11ed-0a80-0fde000a17d9
+lead;Наименование сделки;name;Номер заказа покупателя;;name
 lead;Бюджет;price;customerorder;;
 lead;Project;2288581;customerorder;Канал продаж;salesChannel
 lead;Способ заказа;1969983;customerorder;Проект;project
