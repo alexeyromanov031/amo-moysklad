@@ -23,10 +23,6 @@ if (!isset($id))
 $pricelist = file($path.'/pricelist')[0];
 // print_r($pricelist);
 
-//парсим amoParameters.csv
-$amo_params = fileParse($path.'/amoParameters.csv');
-// print_r($amo_params);
-
 // определяем нужные запросы из амо
 //парсим fields.csv
 $config_params = fileParse($path.'/fields.csv');
@@ -182,7 +178,7 @@ function fillFromAmoToMyStorebyCSV($config_params = [])
     
 function productsInfo() //получаем инофрмацию по тавару из заказа Амо и из МойСклад
 {
-    global $mystore, $crm, $order, $pricelist, $amo_params;
+    global $mystore, $crm, $order, $pricelist, $config_params;
     $total_price = 0;
     $delivery_price = 0;
     $products = [];
@@ -197,10 +193,10 @@ function productsInfo() //получаем инофрмацию по тавар�
             $sku = $crm->get_custom_field_value(
                 $get["custom_fields_values"],
                 findField(
-                    "Название",
+                    "Сущность в Амо",
                     "Артикул товара МойСклад в Амо",
-                    "Имя поля в Амо",
-                    $amo_params,
+                    "Имя или id поля в Амо",
+                    $config_params,
                 ),
             );
             $product = array(
@@ -306,7 +302,7 @@ function customer()
 
 function newCustomerOrder($paymentInStatus = false)
 {
-    global $mystore, $crm, $order, $amo_params, $config_params, $customer, $products;
+    global $mystore, $crm, $order, $config_params, $customer, $products;
 
     $attribute_data = [];
     foreach ($config_params as $param) {
@@ -331,7 +327,6 @@ function newCustomerOrder($paymentInStatus = false)
         );
     }
     $data["positions"] = $positions;
-
     log_func($data, "data for order creation");
 
     // $new_order = $mystore->callFunc(
@@ -354,10 +349,10 @@ function newCustomerOrder($paymentInStatus = false)
         $paymentInStatus = $crm->get_custom_field_value(
             $order["lead"]["custom_fields_values"],
             findField(
-                "Название",
+                "Сущность в Амо",
                 "Предоплата",
-                "Имя поля в Амо",
-                $amo_params,
+                "Имя или id поля в Амо",
+                $config_params,
             ),
         );
         log_func((float)$paymentInStatus, "paymentDraft");
