@@ -1,12 +1,17 @@
-﻿Сущность в Амо;Наименование поля в Амо;Имя или id поля в Амо;Сущность в Мой Склад;Наименование поля в Мойсклад;Имя или id поля в МойСклад
-lead;Ссылка на сделку Амо;_links.self.href;customerorder;;7092a570-76ba-11ed-0a80-0fde000a17d9
-lead;Наименование сделки;name;Номер заказа покупателя;;name
-lead;Бюджет;price;customerorder;;
-lead;Project;2288581;customerorder;Канал продаж;salesChannel
-lead;Способ заказа;1969983;customerorder;Проект;project
-lead;Способ отправки;1991109;customerorder;Способ отправки;03eed389-7aa8-11ed-0a80-03dc00047530
-lead;Метод оплаты;1991109;customerorder;Метод оплаты;83b06940-7f8c-11ed-0a80-03e9003b3ed3
-lead;Транспортная компания;1988163;customerorder;Транспортная компания;83b06c72-7f8c-11ed-0a80-03e9003b3ed4
-lead;Трек1;1785064;demand;Трек-номер;e9dee5be-80f8-11ed-0a80-013a001e8a7f
-lead;Обработан;1988901;customerorder;;
-contact;Description;1967219;customerorder;Адрес доставки;shipmentAddress
+﻿**Конфигурационный файл attributes полей в Амо и МойСкад при создании контрагента в МойСкад**
+Тип запроса;Сущность в Амо;Наименование поля в Амо;Имя или id поля в Амо;Сущность в МойСклад;Наименование поля в МойCклад;Имя или id поля в МойСклад;Тип Данных в МойСклад
+contacts;lead;id контакта;_embedded.contacts.0.id;;;;
+counterparty;contacts;Имя контакта в Амо;name;Имя контрагента;;name;
+counterparty;contacts;Телефон;1271170;Телефон контрагента;;phone;
+counterparty;contacts;Ссылка на Контакт;_links.self.href;counterparty;;b7be5da5-7554-11ed-0a80-01190019a308;
+order;lead;Ссылка на сделку Амо;_links.self.href;customerorder;;7092a570-76ba-11ed-0a80-0fde000a17d9;
+order;lead;Наименование сделки;name;Номер заказа покупателя;;name;
+order;lead;Бюджет;price;customerorder;;;
+order;lead;Project;2288581;customerorder;Канал продаж;saleschannel;meta
+order;lead;Способ заказа;1969983;customerorder;Проект;project;meta
+order;lead;Способ отправки;1991109;customerorder;Способ отправки;03eed389-7aa8-11ed-0a80-03dc00047530;a6c3ab3a-7aa7-11ed-0a80-03dc00046c12
+order;lead;Метод оплаты;1987727;customerorder;Метод оплаты;83b06940-7f8c-11ed-0a80-03e9003b3ed3;
+order;lead;Трек1;1785064;customerorder;Трек-номер;712f4f03-7ab7-11ed-0a80-03dc00072d69;
+order;lead;Транспортная компания;1988163;customerorder;Транспортная компания;83b06c72-7f8c-11ed-0a80-03e9003b3ed4;
+order;lead;Обработан;1988901;customerorder;;;
+order;contacts;Description;1967219;customerorder;Адрес доставки;shipmentAddress;
