@@ -1,8 +1,5 @@
 <?php
 
-// $server_name = $_SERVER["SERVER_NAME"];
-// $link = 'https://'.$server_name; 
-
 $dirname = "/scripts";
 $path = substr( dirname(  __FILE__ ), 0, -strlen($dirname));
 $database = $path."/db_store.db";
