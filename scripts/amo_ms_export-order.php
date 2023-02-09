@@ -9,10 +9,9 @@ require_once ($path.$dirname.'/modules/functions.php');
 //получаем вебхук из AMO при переходе сделки в статус "Заказано"
 $data = $_GET;
 // $data = $_POST
-// log_func($data, "input data from webhook",true);
+log_func($data, "input data from webhook",true);
 
 $id = isset($data["id"])?$data["id"]:null;
-$id = 33426463;
 if (!isset($id)) 
 {
     log_func($data, "crm id not detected");
