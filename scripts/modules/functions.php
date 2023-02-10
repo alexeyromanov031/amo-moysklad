@@ -25,7 +25,7 @@
 	  }
 	}
 
-	function log_func($data = [], $description = "", $debug = true)
+	function log_func($data = [], $description = "", $debug = false)
 	{
 		if ($debug) print_r($data); 
  	   	global $path;
@@ -37,6 +37,6 @@
 	        mkdir($log_filename, 0777, true);
 	    }
 	    $log_file_data = $log_filename.'/scripts-php_' . date('d-M-Y') . '.log';
-	    file_put_contents($log_file_data, $log_msg, FILE_APPEND);
+	    file_put_contents($log_file_data, substr($log_msg, 0, 1000), FILE_APPEND);
 	}
 ?>
