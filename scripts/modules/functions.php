@@ -61,7 +61,7 @@
 	{
 		if ($debug) print_r($data); 
  	   	global $path;
- 	   	$log_msg = date('Y-m-d H:i:s ').$description.' '.json_encode($data, JSON_UNESCAPED_UNICODE)."\n";
+ 	   	$log_msg = substr(date('Y-m-d H:i:s ').$description.' '.json_encode($data, JSON_UNESCAPED_UNICODE),0,800)."\n";
 	    $log_filename = $path.'/log';
 	    if (!file_exists($log_filename)) 
 	    {
@@ -70,6 +70,6 @@
 	    }
 	    $log_file_data = $log_filename.'/scripts-php_' . date('d-M-Y') . '.log';
 	    // file_put_contents($log_file_data, $log_msg, FILE_APPEND);
-	    file_put_contents($log_file_data, substr($log_msg, 0, 1000), FILE_APPEND);
+	    file_put_contents($log_file_data, $log_msg, FILE_APPEND);
 	}
 ?>

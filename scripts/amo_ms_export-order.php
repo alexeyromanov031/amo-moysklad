@@ -43,7 +43,8 @@ else
     die();
 }
 //Если статус Заказано по fields.csv, то отправляем в работу
-if ($data["status_id"] == findField("Наименование поля в Амо","Заказано","Имя или id поля в Амо",$config_params))
+$successStatusArray = explode(',',findField("Наименование поля в Амо","Заказано","Имя или id поля в Амо",$config_params));
+if (in_array($data["status_id"],$successStatusArray))
 {
     //парсим pricelist
     $pricelist = file($path.'/pricelist')[0];
