@@ -35,7 +35,7 @@ if (isset($id))
     foreach ($config_params as $config_param) {
         if (!in_array($config_param["Сущность в Амо"],$request_info)) $request_info[] = $config_param["Сущность в Амо"];
     }
-    print_r($request_info);
+    // print_r($request_info);
 }
 else
 {
@@ -45,9 +45,9 @@ else
 //Если статус Заказано по fields.csv, то отправляем в работу
 if ($data["status_id"] == findField("Наименование поля в Амо","Заказано","Имя или id поля в Амо",$config_params))
 {
-    // //парсим pricelist
+    //парсим pricelist
     $pricelist = file($path.'/pricelist')[0];
-    // // print_r($pricelist);
+    // print_r($pricelist);
 
     //конфигурируем запросы МойСклад
     $mystore = new mystore();
@@ -89,37 +89,7 @@ if ($data["status_id"] == findField("Наименование поля в Амо
     }
 }
 
-//file parser
-function fileParse($filePath = "")
-{
-    //парсим fields.csv
-    $csvFile_fields = file($filePath);
-    array_shift($csvFile_fields);
-    $data_key = explode(";", substr($csvFile_fields[0], 0, -2));
-    array_shift($csvFile_fields);
-    $config_params = [];
-    foreach ($csvFile_fields as $line) {
-        $line_value = explode(";", substr($line, 0, -2));
-        $line_data = [];
-        foreach ($line_value as $key=>$value) {
-            if (!empty($data_key[$key])) $line_data[$data_key[$key]] = $value;
-        }
-        $config_params[] = $line_data;
-    }
-    return $config_params;
-}
-
-// поиск необходимого значения поля $searchKey в строке где находится параметр с ключем $searchByKey и значением $searchByValue
-function findField($searchByKey,$searchByValue,$searchKey,$data) 
-{
-    foreach ($data as $parameter) {
-        if ($parameter[$searchByKey] === $searchByValue)
-        {
-            return $parameter[$searchKey];
-        }
-    }
-}
-
+//Заполняет необходимые поля из Амо в требуемые поля для МойСклад согласно fields.csv
 function fillFromAmoToMyStorebyCSV($config_params = [])
 {
     global $mystore, $crm, $order;
@@ -205,7 +175,7 @@ function productsInfo() //получаем инофрмацию по тавар�
         {
             $sku = $crm->get_custom_field_value(
                 $get["custom_fields_values"],
-                findField("Наименование поля в Амо","Артикул","Имя или id поля в Амо",$config_params)
+                findField("Наименование поля в Амо","Ссылка на сделку Амо","Имя или id поля в Амо",$config_params)
             );
             $product = array(
                 "name" => $get["name"],
@@ -246,7 +216,8 @@ function productsInfo() //получаем инофрмацию по тавар�
     if ($total_price == 0)
     {
         log_func([],"TOTAL PRICE IS NULL ERRRORRRR!!!!");
-        die("TOTAL PRICE IS NULL ERRRORRRR!!!!");
+        // die("TOTAL PRICE IS NULL ERRRORRRR!!!!");
+        $products = [];
     }
 
     // //Расчет конечной цены товара

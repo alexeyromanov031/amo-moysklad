@@ -1,5 +1,37 @@
 <?php
 
+	//file parser
+	function fileParse($filePath = "")
+	{
+	    //парсим fields.csv
+	    $csvFile_fields = file($filePath);
+	    array_shift($csvFile_fields);
+	    $data_key = explode(";", substr($csvFile_fields[0], 0, -2));
+	    array_shift($csvFile_fields);
+	    $config_params = [];
+	    foreach ($csvFile_fields as $line) {
+	        $line_value = explode(";", substr($line, 0, -2));
+	        $line_data = [];
+	        foreach ($line_value as $key=>$value) {
+	            if (!empty($data_key[$key])) $line_data[$data_key[$key]] = $value;
+	        }
+	        $config_params[] = $line_data;
+	    }
+	    return $config_params;
+	}
+
+	// поиск необходимого значения поля $searchKey в строке где находится параметр с ключем $searchByKey и значением $searchByValue
+	function findField($searchByKey,$searchByValue,$searchKey,$data) 
+	{
+	    foreach ($data as $parameter) {
+	        if ($parameter[$searchByKey] === $searchByValue)
+	        {
+	            return $parameter[$searchKey];
+	        }
+	    }
+	}
+
+	//Curl request
 	function request($url,$data=array(),$method='GET', $header = ['Content-Type:application/json'], $options = [])
 	{
 	  $curl = curl_init();
@@ -37,6 +69,7 @@
 	        mkdir($log_filename, 0777, true);
 	    }
 	    $log_file_data = $log_filename.'/scripts-php_' . date('d-M-Y') . '.log';
+	    // file_put_contents($log_file_data, $log_msg, FILE_APPEND);
 	    file_put_contents($log_file_data, substr($log_msg, 0, 1000), FILE_APPEND);
 	}
 ?>
