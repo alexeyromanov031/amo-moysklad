@@ -43,7 +43,7 @@ else
     die();
 }
 //Если статус Заказано по fields.csv, то отправляем в работу
-$successStatusArray = explode(',',findField("Наименование поля в Амо","Заказано","Имя или id поля в Амо",$config_params));
+$successStatusArray = explode(',', str_replace(array("[", "]"), '', findField("Наименование поля в Амо","Заказано","Имя или id поля в Амо",$config_params)));
 if (in_array($data["status_id"],$successStatusArray))
 {
     //парсим pricelist
@@ -88,6 +88,14 @@ if (in_array($data["status_id"],$successStatusArray))
         $get = newCustomerOrder();
         // log_func($get, "newCustomerOrder");
     }
+    else
+    {
+        log_func($order, "order not found");
+    }
+}
+else
+{
+    log_func($data, "status id not in array");
 }
 
 //Заполняет необходимые поля из Амо в требуемые поля для МойСклад согласно fields.csv
