@@ -81,6 +81,15 @@ class amocrmapi3 {
 		}
 		return $result;
 	}
+	// get custom field id by name or id from convert array
+	function get_custom_field_id ($custom_field = [], $field_id, $end=true){
+		$result = 0;
+		if (!isset($custom_field) || !isset($field_id)) return null;
+		foreach ($custom_field as $value) {
+			if (in_array($field_id, $value)) $result = $end ? end($value["values"])["enum_id"] : $value["values"][0]["enum_id"];
+		}
+		return $result;
+	}
 
 	function db_select($request)
 	{
