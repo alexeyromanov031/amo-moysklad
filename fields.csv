@@ -6,7 +6,7 @@ counterparty;contacts;Телефон;1271170;Телефон контрагент
 counterparty;contacts;Ссылка на Контакт;_links.self.href;counterparty;;b7be5da5-7554-11ed-0a80-01190019a308;
 order;lead;Ссылка на сделку Амо;_links.self.href;customerorder;;7092a570-76ba-11ed-0a80-0fde000a17d9;
 order;lead;Наименование сделки;name;Номер заказа покупателя;;name;
-order;lead;Project;2288581;customerorder;Канал продаж;saleschannel;meta
+order;lead;Канал продаж;2295535;customerorder;Канал продаж;saleschannel;meta
 order;lead;Способ заказа;1969983;customerorder;Проект;project;meta
 order;lead;Способ отправки;1991109;customerorder;Способ отправки;03eed389-7aa8-11ed-0a80-03dc00047530;a6c3ab3a-7aa7-11ed-0a80-03dc00046c12
 order;lead;Метод оплаты;1987727;customerorder;Метод оплаты;83b06940-7f8c-11ed-0a80-03e9003b3ed3;
