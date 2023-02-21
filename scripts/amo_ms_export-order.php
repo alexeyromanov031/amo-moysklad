@@ -22,7 +22,6 @@ if (isset($data["leads"]["status"]))
     request($url,$post_data,'POST');
     die();
 }
-
 //если в запросе есть id и status id, то отправляем в работу
 $id = (!empty($data["id"]) && !empty($data["status_id"]))?$data["id"]:null;
 if (isset($id))
@@ -119,8 +118,11 @@ function fillFromAmoToMyStorebyCSV($config_params = [])
                 for ($i=0; $i < sizeof($params); $i++) {
                     $variable = isset($variable[$params[$i]])?$variable[$params[$i]]:"";
                 }
-                $amo_data = $variable;
+                $amo_data =  $variable;
             }
+            //если есть префикс, топ подставляем его к полученным данным
+            if (isset($param["Префикс"]))
+                $amo_data = $param["Префикс"].$amo_data;
 
             //Формируем поля для заказа МойСклад
             //Если поле имеет тип метаданных, то делаем запрос в МойСклад
@@ -139,7 +141,7 @@ function fillFromAmoToMyStorebyCSV($config_params = [])
             }
             else
             {
-                $result = $amo_data;
+                $result = $amo_data."";
             }
             // log_func($result, "connect amo and myStore data");
 
@@ -179,7 +181,7 @@ function productsInfo() //получаем инофрмацию по тавар�
     {
         //получаем информацию о товаре из заказа Амо
         $get = $crm->Call_func('/api/v4/catalogs/'.$prod["metadata"]["catalog_id"].'/elements/'.$prod["id"]);
-        // log_func($get, "product info from amo");
+        log_func($get, "product info from amo");
         if (isset($get["id"]))
         {
             $sku = $crm->get_custom_field_value(

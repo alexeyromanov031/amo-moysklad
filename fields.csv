@@ -1,20 +1,21 @@
 ﻿**Конфигурационный файл attributes полей в Амо и МойСкад при создании контрагента в МойСкад**
-Тип запроса;Сущность в Амо;Наименование поля в Амо;Имя или id поля в Амо;Сущность в МойСклад;Наименование поля в МойCклад;Имя или id поля в МойСклад;Тип Данных в МойСклад
-contacts;lead;id контакта;_embedded.contacts.0.id;;;;
-counterparty;contacts;Имя контакта в Амо;name;Имя контрагента;;name;
-counterparty;contacts;Телефон;1271170;Телефон контрагента;;phone;
-counterparty;contacts;Ссылка на Контакт;_links.self.href;counterparty;;b7be5da5-7554-11ed-0a80-01190019a308;
-order;lead;Ссылка на сделку Амо;_links.self.href;customerorder;;7092a570-76ba-11ed-0a80-0fde000a17d9;
-order;lead;Наименование сделки;name;Номер заказа покупателя;;name;
-order;lead;Project;2288581;customerorder;Канал продаж;saleschannel;meta
-order;lead;Способ заказа;1969983;customerorder;Проект;project;meta
-order;lead;Способ отправки;1991109;customerorder;Способ отправки;03eed389-7aa8-11ed-0a80-03dc00047530;a6c3ab3a-7aa7-11ed-0a80-03dc00046c12
-order;lead;Метод оплаты;1987727;customerorder;Метод оплаты;83b06940-7f8c-11ed-0a80-03e9003b3ed3;
-order;lead;Трек1;1785064;customerorder;Трек-номер;712f4f03-7ab7-11ed-0a80-03dc00072d69;
-order;lead;Транспортная компания;1988163;customerorder;Транспортная компания;83b06c72-7f8c-11ed-0a80-03e9003b3ed4;
-order;contacts;Description;1967219;customerorder;Адрес доставки;shipmentAddress;
-other;lead;Бюджет;price;customerorder;;;
-other;lead;Обработан;1988901;customerorder;;;
-other;lead;Получена оплата;1989105;;;;
-other;lead;Артикул;2291087;;;;
-other;lead;Заказано;[12404886,33256072,16083094,21653911];;;;
+Тип запроса;Сущность в Амо;Наименование поля в Амо;Имя или id поля в Амо;Сущность в МойСклад;Наименование поля в МойCклад;Имя или id поля в МойСклад;Тип Данных в МойСклад;Префикс
+contacts;lead;id контакта;_embedded.contacts.0.id;;;;;
+counterparty;contacts;Имя контакта в Амо;name;Имя контрагента;;name;;
+counterparty;contacts;Телефон;1271170;Телефон контрагента;;phone;;
+counterparty;contacts;Ссылка на Контакт;id;counterparty;;b7be5da5-7554-11ed-0a80-01190019a308;;https://mygepatit.amocrm.ru/contacts/detail/
+order;lead;Ссылка на сделку Амо;id;customerorder;;7092a570-76ba-11ed-0a80-0fde000a17d9;;https://mygepatit.amocrm.ru/leads/detail/
+order;lead;Наименование сделки;name;Номер заказа покупателя;;name;;
+order;lead;Канал продаж;2295535;customerorder;Канал продаж;saleschannel;meta;
+order;lead;Способ заказа;1969983;customerorder;Проект;project;meta;
+order;lead;Способ отправки;1991109;customerorder;Способ отправки;03eed389-7aa8-11ed-0a80-03dc00047530;a6c3ab3a-7aa7-11ed-0a80-03dc00046c12;
+order;lead;Метод оплаты;1987727;customerorder;Метод оплаты;83b06940-7f8c-11ed-0a80-03e9003b3ed3;;
+order;lead;Трек1;1785064;customerorder;Трек-номер;712f4f03-7ab7-11ed-0a80-03dc00072d69;;
+order;lead;Транспортная компания;1988163;customerorder;Транспортная компания;83b06c72-7f8c-11ed-0a80-03e9003b3ed4;;
+order;contacts;Description;1967219;customerorder;Адрес доставки;shipmentAddress;;
+other;lead;Бюджет;price;customerorder;;;;
+other;lead;Обработан;1988901;customerorder;;;;
+other;lead;Получена оплата;1989105;;;;;
+other;lead;Артикул;2291087;;;;;
+other;lead;Заказано;[12404886,33256072,16083094,21653911];;;;;
+order;lead;Комментарий Логистика;1989103;customerorder;Комментарий;description;;
