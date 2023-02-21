@@ -132,7 +132,7 @@ function fillFromAmoToMyStorebyCSV($config_params = [])
                 $type = (strlen($param["Имя или id поля в МойСклад"]) > 20)?"customentity/":$param["Имя или id поля в МойСклад"];
                 $type .= (strlen($param["Тип Данных в МойСклад"]) > 20)?$param["Тип Данных в МойСклад"]:"";
                 log_func($type." - ".$amo_data, "find metadata in myStore by amo request");
-                $getMetaData = $mystore->callFunc('/'.$type.'?filter='.http_build_query(array("name"=>$amo_data)),array(),'GET');
+                $getMetaData = $mystore->callFunc('/'.strtolower($type).'?filter='.http_build_query(array("name"=>$amo_data)),array(),'GET');
                 log_func($getMetaData, "find metadata in myStore");
                 if (isset($getMetaData["rows"][0]))
                 {
