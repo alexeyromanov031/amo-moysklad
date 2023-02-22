@@ -186,7 +186,7 @@ function productsInfo() //получаем инофрмацию по тавар�
         {
             $sku = $crm->get_custom_field_value(
                 $get["custom_fields_values"],
-                findField("Наименование поля в Амо","Ссылка на сделку Амо","Имя или id поля в Амо",$config_params)
+                findField("Наименование поля в Амо","SKU","Имя или id поля в Амо",$config_params)
             );
             $product = array(
                 "name" => $get["name"],
@@ -303,7 +303,6 @@ function newCustomerOrder($paymentInStatus = false)
     $data = fillFromAmoToMyStorebyCSV($attribute_data);
     $data["organization"] = array("meta" => $mystore->mystore_config["meta"]);
     $data["agent"] = array("meta" => $customer["meta"]);
-    // $data["attributes"] = [];
  
     //Добавляем продукты к заказу
     $positions = [];
@@ -335,20 +334,20 @@ function newCustomerOrder($paymentInStatus = false)
             $order["lead"]["custom_fields_values"],
             findField("Наименование поля в Амо","Получена оплата","Имя или id поля в Амо",$config_params)
         );
-        log_func((float)$paymentInStatus, "paymentDraft");
+        log_func((float)$paymentInStatus, "paymentInStatus");
 
         if ($paymentInStatus)
         {
             // Получаем шаблон платежа
             $paymentDraft = $mystore->callFunc('/paymentin/new',
                     array( 
-                        "operations" => array("meta"=> $new_order["meta"])
+                        "operations" => array(array("meta"=> $new_order["meta"]))
                     ),
                     'PUT'
             );
-            // log_func($paymentDraft, "paymentDraft");
+            // log_func($paymentDraft, "paymentDraft first");
             $paymentDraft["agent"] = array("meta"=>$customer["meta"]);
-            $paymentDraft["operations"] = array("meta"=>$new_order["meta"]);
+            $paymentDraft["operations"] = array(array("meta"=> $new_order["meta"]));
             $paymentDraft["paymentPurpose"] = "Предоплата по заказу ".$new_order["name"];
             $paymentDraft["sum"] = (float)$paymentInStatus*100.0;
             log_func($paymentDraft, "paymentDraft after sum correct");

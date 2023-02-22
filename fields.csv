@@ -18,4 +18,5 @@ other;lead;Обработан;1988901;customerorder;;;;
 other;lead;Получена оплата;1989105;;;;;
 other;lead;Артикул;2291087;;;;;
 other;lead;Заказано;[12404886,33256072,16083094,21653911];;;;;
+other;elements;SKU;2291087;;;;;
 order;lead;Комментарий Логистика;1989103;customerorder;Комментарий;description;;
