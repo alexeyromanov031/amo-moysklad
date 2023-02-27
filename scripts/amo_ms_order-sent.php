@@ -8,6 +8,7 @@ require_once ($path.$dirname.'/modules/functions.php');
 
 //получаем вебхук из AMO при переходе сделки в статус "Заказано"
 $data = empty($_POST)?json_decode(file_get_contents('php://input'), true):$_POST;
+$data = empty($data)?$_GET:$data;
 log_func($data, "script 3 - input data from webhook");
 
 //webhook живет небольшое количество времени, поэтому повторяем запрос
@@ -35,12 +36,12 @@ if (isset($id))
     $statuses_params = fileParse($path.'/statuses.csv');
 
     //конфигурируем запросы МойСклад
-	$mystore = new mystore();
+    $mystore = new mystore();
 
-	//конфигурируем запросы Амо
-	$crm = new amocrmapi3();
+    //конфигурируем запросы Амо
+    $crm = new amocrmapi3();
 
-	//запрос заказа по id
+    //запрос заказа по id
     $get_order = $mystore->callFunc(
         '/customerorder/'.$id,
         array(),
@@ -50,54 +51,54 @@ if (isset($id))
 
     if (isset($get_order["name"]))
     {
-    	// берем нужные поля из Инфо заявки в мой склад
-    	$fieldId = findField("Наименование поля в Амо","Ссылка на сделку Амо","Имя или id поля в МойСклад",$config_params);
-    	$trackNumIdMyStore = findField("Наименование поля в Амо","Трек1","Имя или id поля в МойСклад",$config_params);
-    	foreach($get_order["attributes"] as $attribute)
-    	{
-    		// Получаем id заказа в Амо
+        // берем нужные поля из Инфо заявки в мой склад
+        $fieldId = findField("Наименование поля в Амо","Ссылка на сделку Амо","Имя или id поля в МойСклад",$config_params);
+        $trackNumIdMyStore = findField("Наименование поля в Амо","Трек1","Имя или id поля в МойСклад",$config_params);
+        foreach($get_order["attributes"] as $attribute)
+        {
+            // Получаем id заказа в Амо
             if ($attribute["id"] == $fieldId)
             {
-                $first_let = strpos($attribute["value"],"leads/")+6;
-                $last_let = strpos($attribute["value"],"?with=");
-                $crmLeadId = substr($attribute["value"],$first_let,$last_let-$first_let);
+                $first_let = strlen(findField("Наименование поля в Амо","Ссылка на сделку Амо","Префикс",$config_params));
+                // $last_let = strpos($attribute["value"],"?with=");
+                $crmLeadId = substr($attribute["value"],$first_let);
             }
             // Получаем трек-номер
             if ($attribute["id"] == $trackNumIdMyStore)
             {
                 $trackNum = $attribute["value"];
             }
-    	}
-    	// обновляем заказ в Амо
-    	if (isset($crmLeadId) && isset($trackNum))
-    	{
-    		//получаем заказ
-    		$order = $crm->Call_func('/api/v4/leads/'.$crmLeadId.'?with=catalog_elements,contacts,products');
-    		log_func($order, "script 3 - push track number to Amo order");
+        }
+        // обновляем заказ в Амо
+        if (isset($crmLeadId) && isset($trackNum))
+        {
+            //получаем заказ
+            $order = $crm->Call_func('/api/v4/leads/'.$crmLeadId.'?with=catalog_elements,contacts,products');
+            log_func($order, "script 3 - push track number to Amo order");
 
-    		// ищем на какой статус нужно поменять
-    		$statusIdNew = GetNewStatusUpdateId($order);
+            // ищем на какой статус нужно поменять
+            $statusIdNew = GetNewStatusUpdateId($order);
             log_func($statusIdNew, "script 3 - status");
-    		if (isset($statusIdNew))
-    		{
-    			// обновляем трек номер в заказе
-	    		$trackNumIdAmo = findField("Наименование поля в Амо","Трек1","Имя или id поля в Амо",$config_params);
-	    		$get = $crm->Call_func(
-		    		'/api/v4/leads/'.$crmLeadId,
-		    		array("custom_fields_values"=>array(array("field_id"=>intval($trackNumIdAmo),"values"=>array(array("value"=>$trackNum))))),
-		    		'PATCH'
-		    	);
-	    		log_func($get, "script 3 - push track number to Amo order");
+            if (isset($statusIdNew))
+            {
+                // обновляем трек номер в заказе
+                $trackNumIdAmo = findField("Наименование поля в Амо","Трек1","Имя или id поля в Амо",$config_params);
+                $get = $crm->Call_func(
+                    '/api/v4/leads/'.$crmLeadId,
+                    array("custom_fields_values"=>array(array("field_id"=>intval($trackNumIdAmo),"values"=>array(array("value"=>$trackNum))))),
+                    'PATCH'
+                );
+                log_func($get, "script 3 - push track number to Amo order");
 
-				// обновляем статус
-		    	$get = $crm->Call_func(
-		    		'/api/v4/leads/'.$crmLeadId,
-		    		array("status_id"=>intval($statusIdNew)),
-		    		'PATCH'
-		    	);
-		    	log_func($get, "script 3 - change status in Amo order");
-    		}
-    	}
+                // обновляем статус
+                $get = $crm->Call_func(
+                    '/api/v4/leads/'.$crmLeadId,
+                    array("status_id"=>intval($statusIdNew)),
+                    'PATCH'
+                );
+                log_func($get, "script 3 - change status in Amo order");
+            }
+        }
 
     }
 }
@@ -109,15 +110,15 @@ else
 // Получаем необходимый статус по значениям воронки и доп. полей
 function GetNewStatusUpdateId($order = [])
 {
-	global $crm, $statuses_params;
+    global $crm, $statuses_params;
 
-	foreach ($statuses_params as $sParam) {
-		if ($sParam["id воронки"] == $order["pipeline_id"])
-		{
-			// получаем значение по Амо
+    foreach ($statuses_params as $sParam) {
+        if ($sParam["id воронки"] == $order["pipeline_id"])
+        {
+            // получаем значение по Амо
             if (intval($sParam['id поля сделки']) > 1000)
             {
-                $amo_data = $crm->get_custom_field_id($order["custom_fields_values"], $sParam["Поле сделки"]);
+                $amo_data = $crm->get_custom_field_id($order["custom_fields_values"], $sParam["id поля сделки"]);
             }
             else
             {
@@ -129,12 +130,12 @@ function GetNewStatusUpdateId($order = [])
                 $amo_data = $variable;
             }
             log_func($amo_data, "script 3 - status");
-            if (in_array($amo_data, explode(',', str_replace(array("[", "]"), '', $sParam["Значение поля сделки"]))))
-            	return $sParam["Поменять на статус (id статуса)"];
-		}
-	}
+            if ($amo_data != 0 && in_array($amo_data, explode(',', str_replace(array("[", "]"), '', $sParam["id значения поля сделки"]))))
+                return $sParam["Поменять на статус (id статуса)"];
+        }
+    }
 
-	return null;
+    return null;
 }
 
 ?>

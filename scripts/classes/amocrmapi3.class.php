@@ -46,7 +46,7 @@ class amocrmapi3 {
 		$data = $this->crm_config;
 		$data ["grant_type"] = "refresh_token";
 		$data ["refresh_token"] = $this->db_select('WHERE name = "refresh_token";')[0]["value"];
-		print_r($data);
+		// print_r($data);
 		$result = request($this->crm_domain.'/oauth2/access_token', $data, 'POST',['Content-Type:application/json']);
 		if (isset($result["access_token"]))
 		{
@@ -59,13 +59,16 @@ class amocrmapi3 {
 	
 	//Функция отправки запроса к АмоCRM
 	function Call_func($link, $data = null, $http_method = 'GET') {
-		print_r($data);
+		// print_r($data);
 		$access_token = $this->db_select('WHERE name = "access_token";')[0];
 		// Если ключа нет в бд, то создаем новый
 		if (!isset($access_token))
 			$this->First_Auth();
+
+		log_func(time(), "CRM request localtime");
+		log_func($access_token, "CRM access_token");
 		// Если истек период работы ключа
-		if (time() >= $access_token["expired"])
+		if (time()-100 >= $access_token["expired"])
 			$this->Refresh_Auth();
 
 		$result = request($this->crm_domain.$link, $data, $http_method, ['Content-Type:application/json','Authorization: Bearer ' .$access_token["value"]]);	
@@ -74,21 +77,19 @@ class amocrmapi3 {
 
 	// get custom field value by name or id from convert array
 	function get_custom_field_value ($custom_field = [], $field_id, $end=true){
-		$result = 0;
 		if (!isset($custom_field) || !isset($field_id)) return null;
 		foreach ($custom_field as $value) {
-			if (in_array($field_id, $value)) $result = $end ? end($value["values"])["value"] : $value["values"][0]["value"];
+			if (in_array($field_id, $value)) return $end ? end($value["values"])["value"] : $value["values"][0]["value"];
 		}
-		return $result;
+		return 0;
 	}
 	// get custom field id by name or id from convert array
 	function get_custom_field_id ($custom_field = [], $field_id, $end=true){
-		$result = 0;
 		if (!isset($custom_field) || !isset($field_id)) return null;
 		foreach ($custom_field as $value) {
-			if (in_array($field_id, $value)) $result = $end ? end($value["values"])["enum_id"] : $value["values"][0]["enum_id"];
+			if (in_array($field_id, $value)) return $end ? end($value["values"])["enum_id"] : $value["values"][0]["enum_id"];
 		}
-		return $result;
+		return 0;
 	}
 
 	function db_select($request)
