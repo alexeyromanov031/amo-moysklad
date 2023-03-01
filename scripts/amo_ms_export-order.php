@@ -11,11 +11,12 @@ $data = empty($_POST)?json_decode(file_get_contents('php://input'), true):$_POST
 log_func($data, "input data from webhook");
 
 //webhook живет небольшое количество времени, поэтому повторяем запрос
-if (isset($data["leads"]["status"]))
+if (isset($data["leads"]))
 {
+    $lead_data = array_values($data["leads"])[0];
     $post_data = array(
-        "id"=>$data["leads"]["status"][0]["id"],
-        "status_id"=>$data["leads"]["status"][0]["status_id"],
+        "id"=>$lead_data[0]["id"],
+        "status_id"=>$lead_data[0]["status_id"],
     );
     $url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
     log_func($post_data, "request to me ".$url);
