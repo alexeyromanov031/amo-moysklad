@@ -68,8 +68,11 @@ class amocrmapi3 {
 		log_func(time(), "CRM request localtime");
 		log_func($access_token, "CRM access_token");
 		// Если истек период работы ключа
-		if (time()-100 >= $access_token["expired"])
+		if (time() >= $access_token["expired"])
+		{
 			$this->Refresh_Auth();
+			$access_token = $this->db_select('WHERE name = "access_token";')[0];
+		}
 
 		$result = request($this->crm_domain.$link, $data, $http_method, ['Content-Type:application/json','Authorization: Bearer ' .$access_token["value"]]);	
 		return $result;

@@ -84,8 +84,46 @@ if (in_array($data["status_id"],$successStatusArray))
         // log_func($customer, "customer");
 
         //Создаем заказ в параметрах указывается предоплатный или нет
-        $get = newCustomerOrder();
-        // log_func($get, "newCustomerOrder");
+        $new_order = newCustomerOrder();
+        // log_func($newOrder, "newCustomerOrder");
+
+        if (isset($new_order["id"]))
+        {
+            $paymentInPrice = 0;
+            //Важно, если заказ предоплатный, то создаем еще входящий платеж
+            // $paymentInPrice = $crm->get_custom_field_value(
+            //     $order["lead"]["custom_fields_values"],
+            //     findField("Наименование поля в Амо","Получена оплата","Имя или id поля в Амо",$config_params)
+            // );
+
+            //парсим statuses.csv
+            $statuses_params = fileParse($path.'/statuses.csv');
+            // проверяем, предоплатный ли заказ. Если заказ предоплатный, то создаем входящий платеж
+            foreach ($statuses_params as $sParam)
+            {
+                if ($sParam["id воронки"] == $order["lead"]["pipeline_id"] && $sParam["Поменять на статус"] == "Успешно реализовано")
+                {
+                    $statusesInLine = explode(',', str_replace(array("[", "]"), '', $sParam["id значения поля сделки"]));
+                    $amo_data = $crm->get_custom_field_id($order["lead"]["custom_fields_values"], $sParam["id поля сделки"]);
+                    if (in_array($amo_data,$statusesInLine))
+                    {
+                        $paymentInPrice = $order["lead"]["price"];
+                    }
+                }
+            }
+            log_func((float)$paymentInPrice, "paymentInPrice");
+
+            if ($paymentInPrice > 0)
+            {
+                //создаем входящий платеж. $paymentInPrice в рублях
+                paymentIn($paymentInPrice);
+            }
+        }
+        else
+        {
+            log_func([],"new order cannot be crearted ERRRORRRR!!!!");
+            die();
+        }
     }
     else
     {
@@ -326,46 +364,31 @@ function newCustomerOrder($paymentInStatus = false)
 
     $new_order = $mystore->callFunc('/customerorder',$data,'POST');
     log_func($new_order, "create new order");
+    return $new_order;
+}
 
-    if (isset($new_order["id"]))
-    {
-        //Важно, если заказ предоплатный, то создаем еще входящий платеж
-        $paymentInStatus = $crm->get_custom_field_value(
-            $order["lead"]["custom_fields_values"],
-            findField("Наименование поля в Амо","Получена оплата","Имя или id поля в Амо",$config_params)
-        );
-        log_func((float)$paymentInStatus, "paymentInStatus");
-
-        if ($paymentInStatus)
-        {
-            // Получаем шаблон платежа
-            $paymentDraft = $mystore->callFunc('/paymentin/new',
-                    array( 
-                        "operations" => array(array("meta"=> $new_order["meta"]))
-                    ),
-                    'PUT'
-            );
-            // log_func($paymentDraft, "paymentDraft first");
-            $paymentDraft["agent"] = array("meta"=>$customer["meta"]);
-            $paymentDraft["operations"] = array(array("meta"=> $new_order["meta"]));
-            $paymentDraft["paymentPurpose"] = "Предоплата по заказу ".$new_order["name"];
-            $paymentDraft["sum"] = (float)$paymentInStatus*100.0;
-            log_func($paymentDraft, "paymentDraft after sum correct");
-            // создаем платеж на основе шаблона
-            $newPaymentIn = $mystore->callFunc(
-                '/paymentin',
-                $paymentDraft,
-                'POST'
-            );
-            log_func($newPaymentIn, "newPaymentIn");
-        }
-    }
-    else
-    {
-        log_func([],"new order cannot be crearted ERRRORRRR!!!!");
-        die();
-    }
-
-    return "success!";
+function paymentIn($paymentInPrice = 0)
+{
+    global $new_order, $customer, $mystore;
+    // Получаем шаблон платежа
+    $paymentDraft = $mystore->callFunc('/paymentin/new',
+            array( 
+                "operations" => array(array("meta"=> $new_order["meta"]))
+            ),
+            'PUT'
+    );
+    // log_func($paymentDraft, "paymentDraft first");
+    $paymentDraft["agent"] = array("meta"=>$customer["meta"]);
+    $paymentDraft["operations"] = array(array("meta"=> $new_order["meta"]));
+    $paymentDraft["paymentPurpose"] = "Предоплата по заказу ".$new_order["name"];
+    $paymentDraft["sum"] = (float)$paymentInPrice*100.0;
+    log_func($paymentDraft, "paymentDraft after sum correct");
+    // создаем платеж на основе шаблона
+    $newPaymentIn = $mystore->callFunc(
+        '/paymentin',
+        $paymentDraft,
+        'POST'
+    );
+    log_func($newPaymentIn, "newPaymentIn");
 }
 ?>
